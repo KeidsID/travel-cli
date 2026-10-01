@@ -18,12 +18,16 @@ public final class Menu {
         this.title = title;
         this.options = new ArrayList<MenuOption>(List.of(options));
         this.isMainMenu = false;
+
+        addLastOption();
     }
 
     public Menu(String title, MenuOption[] options, boolean isMainMenu) {
         this.title = title;
         this.options = new ArrayList<MenuOption>(List.of(options));
         this.isMainMenu = isMainMenu;
+
+        addLastOption();
     }
 
     /**
@@ -32,8 +36,6 @@ public final class Menu {
      */
     public void show() {
         this.isRunning = true;
-
-        addLastOption();
 
         while (isRunning) {
             IOHelper.printDivider();
