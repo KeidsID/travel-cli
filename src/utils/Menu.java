@@ -14,6 +14,12 @@ public final class Menu {
     private final boolean isMainMenu;
     private boolean isRunning;
 
+    /**
+     * Constructs a new Menu with the specified title and options.
+     *
+     * @param title   The title of the menu.
+     * @param options An array of MenuOption objects representing the menu options.
+     */
     public Menu(String title, MenuOption[] options) {
         this.title = title;
         this.options = new ArrayList<MenuOption>(List.of(options));
@@ -22,6 +28,18 @@ public final class Menu {
         addLastOption();
     }
 
+    /**
+     * Constructs a new Menu with the specified title, options, and a flag
+     * indicating
+     * whether it is the main menu.
+     *
+     * @param title      The title of the menu.
+     * @param options    An array of MenuOption objects representing the menu
+     *                   options.
+     * @param isMainMenu A boolean to indicate whether this menu is the main
+     *                   menu. If true, there will be a confirmation prompt before
+     *                   ending the menu loop
+     */
     public Menu(String title, MenuOption[] options, boolean isMainMenu) {
         this.title = title;
         this.options = new ArrayList<MenuOption>(List.of(options));

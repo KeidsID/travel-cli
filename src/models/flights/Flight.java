@@ -1,6 +1,12 @@
 package models.flights;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
+
+import utils.IDGenerator;
+
 public final class Flight {
+    private final String id;
     private final String flightNumber;
     private final String airline;
     private final FlightStop departure;
@@ -24,12 +30,17 @@ public final class Flight {
             throw new IllegalArgumentException("Flight.ticketPrice cannot be negative");
         }
 
+        this.id = flightNumber + "-" + IDGenerator.generateID();
         this.flightNumber = flightNumber;
         this.airline = airline;
         this.departure = departure;
         this.arrival = arrival;
         this.maxPassangers = maxPassanger;
         this.ticketPrice = ticketPrice;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getFlightNumber() {
@@ -56,8 +67,19 @@ public final class Flight {
         return ticketPrice;
     }
 
+    public int getMaxPassengerCount() {
+        return maxPassangers;
+    }
+
     public int getPassengerCount() {
         return passengerCount;
+    }
+
+    /**
+     * @return The number of available seats on this flight.
+     */
+    public int getAvailableSeats() {
+        return maxPassangers - passengerCount;
     }
 
     public int setPassengerCount(int passengerCount) {
@@ -71,5 +93,27 @@ public final class Flight {
         }
 
         return this.passengerCount = passengerCount;
+    }
+
+    public Duration getEstimatedDuration() {
+        return Duration.between(departure.dateTime(), arrival.dateTime());
+    }
+
+    public Flight copyWithSchedule(ZonedDateTime departureDateTime, ZonedDateTime arrivalDateTime) {
+        return new Flight(
+                flightNumber,
+                airline,
+                new FlightStop(departure.airport(), departureDateTime),
+                new FlightStop(arrival.airport(), arrivalDateTime),
+                maxPassangers, ticketPrice);
+    }
+
+    public Flight copyWithTicketPrice(double ticketPrice) {
+        return new Flight(
+                flightNumber,
+                airline,
+                departure,
+                arrival,
+                maxPassangers, ticketPrice);
     }
 }

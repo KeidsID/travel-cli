@@ -6,7 +6,7 @@ terinspirasi dari platform seperti Traveloka atau Tiket.com.
 
 ## Fitur Aplikasi
 
-- [ ] **Pencarian Penerbangan:** Pengguna dapat mencari jadwal pesawat
+- [x] **Pencarian Penerbangan:** Pengguna dapat mencari jadwal pesawat
       berdasarkan kota asal, tujuan, tanggal, dan jumlah penumpang, serta
       melihat rincian ketersediaan penerbangan.
 
