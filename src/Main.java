@@ -1,14 +1,20 @@
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.function.Consumer;
 
 import data.DummyFlights;
+import data.DummyStays;
 import models.flights.Flight;
+import models.stays.Stay;
 import utils.IOHelper;
 import utils.Menu;
 import utils.MenuOption;
 
 public class Main {
-    static TravelApp app = new TravelApp(DummyFlights.data);
+    static TravelApp app = new TravelApp(DummyFlights.data, DummyStays.data);
     static String user = "Anonim";
 
     public static void main(String[] args) throws Exception {
@@ -35,23 +41,37 @@ public class Main {
                 new MenuOption("Cari Jadwal Penerbangan Lain", () -> searchFlights(false))
         });
 
+        Menu staysMenu = new Menu("MENU PENGINAPAN", new MenuOption[] {
+                new MenuOption("Cari Penginapan", Main::searchStays)
+        });
+
         Menu mainMenu = new Menu("MENU UTAMA", new MenuOption[] {
-                new MenuOption("Menu Penerbangan", () -> flightsMenu.show())
+                new MenuOption("Menu Penerbangan", () -> flightsMenu.show()),
+                new MenuOption("Menu Penginapan", () -> staysMenu.show())
         }, true);
 
         mainMenu.show();
     }
+
+    // ========================================
+    // Travel App Methods
+    // ========================================
 
     private static void searchFlights(boolean isTodayFlight) {
         IOHelper.printDivider();
         IOHelper.println("PENCARIAN PENERBANGAN");
         IOHelper.printDivider();
 
-        String origin = IOHelper.readString("Masukkan lokasi asal: ");
-        String destination = IOHelper.readString("Masukkan lokasi tujuan: ");
-        LocalDate date = isTodayFlight ? LocalDate.now()
-                : IOHelper.readDate("Masukkan tanggal penerbangan (dd-MM-yyyy): ", "dd-MM-yyyy");
-        int passengerCount = IOHelper.readInt("Masukkan jumlah penumpang: ");
+        String origin = readNonBlankString("Darimana anda berangkat? : ");
+        String destination = readNonBlankString("Kemana anda pergi? : ");
+        LocalDate currentDate = LocalDate.now();
+        LocalDate date = isTodayFlight ? currentDate
+                : readNonPastDate("Kapan anda berangkat? (dd-MM-yyyy): ", "dd-MM-yyyy");
+        int passengerCount = IOHelper.readInt("Berapa orang yang akan pergi? : ", (input) -> {
+            if (input <= 0) {
+                throw new InputMismatchException("Jumlah penumpang harus lebih dari 0.");
+            }
+        });
 
         List<Flight> flights = app.searchFlights(origin, destination, date, passengerCount);
 
@@ -65,6 +85,60 @@ public class Main {
         flights.forEach((flight) -> {
             IOHelper.printDivider("-");
             printFlightDetails(flight);
+        });
+    }
+
+    private static void searchStays() {
+        IOHelper.printDivider();
+        IOHelper.println("PENCARIAN PENGINAPAN");
+        IOHelper.printDivider();
+
+        String city = readNonBlankString("Dimana anda akan menginap? : ");
+        LocalDate checkIn = readNonPastDate("Kapan anda check-in? (dd-MM-yyyy): ", "dd-MM-yyyy");
+        LocalDate checkOut = IOHelper.readDate("Kapan anda check-out? (dd-MM-yyyy): ", "dd-MM-yyyy", (dateInput) -> {
+            if (checkIn.isAfter(dateInput)) {
+                throw new InputMismatchException("Tanggal check-out harus setelah tanggal check-in.");
+            }
+        });
+
+        int roomCount = IOHelper.readInt("Butuh berapa kamar? : ", (intInput) -> {
+            if (intInput <= 0) {
+                throw new InputMismatchException("Jumlah kamar harus lebih dari 0.");
+            }
+        });
+
+        List<Stay> stays = app.searchStays(city, checkIn, checkOut, roomCount);
+
+        IOHelper.printDivider();
+        if (stays.isEmpty()) {
+            IOHelper.println("Tidak ada penginapan yang tersedia");
+            return;
+        }
+        IOHelper.println("Hasil pencarian penginapan:");
+
+        stays.forEach((stay) -> {
+            IOHelper.printDivider("-");
+            printStayDetails(stay);
+        });
+    }
+
+    // ========================================
+    // IO Methods
+    // ========================================
+
+    private static String readNonBlankString(String prompt) {
+        return IOHelper.readString(prompt, (input) -> {
+            if (input.isBlank()) {
+                throw new InputMismatchException("tidak boleh kosong");
+            }
+        });
+    }
+
+    private static LocalDate readNonPastDate(String prompt, String dateFormat) {
+        return IOHelper.readDate(prompt, dateFormat, (date) -> {
+            if (date.isBefore(LocalDate.now())) {
+                throw new InputMismatchException("Tanggal tidak boleh sebelum hari ini.");
+            }
         });
     }
 
@@ -106,6 +180,18 @@ public class Main {
 
         IOHelper.print("Harga Tiket    : ");
         IOHelper.printCurrency(flight.getTicketPrice());
+        IOHelper.println("");
+    }
+
+    private static void printStayDetails(Stay stay) {
+        IOHelper.print("Nama           : ");
+        IOHelper.println(stay.getName());
+
+        IOHelper.print("Lokasi         : ");
+        IOHelper.println(stay.getLocation());
+
+        IOHelper.print("Harga per malam: ");
+        IOHelper.printCurrency(stay.getRoomPricePerNight());
         IOHelper.println("");
     }
 

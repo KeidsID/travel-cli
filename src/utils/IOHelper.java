@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 /**
  * Helper class for handling Input/Output operations in the console.
@@ -23,6 +25,27 @@ public final class IOHelper {
         return scanner.nextLine();
     }
 
+    /**
+     * Reads a string from the user input with a validator.
+     *
+     * @param prompt    message to display to the user.
+     * @param validator that displays the message of a thrown exception.
+     * @return The validated string input.
+     */
+    public static String readString(String prompt, Consumer<String> validator) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine();
+
+            try {
+                validator.accept(input);
+                return input;
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
     public static int readInt(String prompt) {
         while (true) {
             try {
@@ -33,6 +56,33 @@ public final class IOHelper {
             } catch (InputMismatchException e) {
                 System.out.println("Input tidak valid. Harap masukkan angka.");
                 scanner.nextLine();
+            }
+        }
+    }
+
+    /**
+     * Reads an integer from the user input with extra validator.
+     * 
+     * @param prompt    message to display to the user.
+     * @param validator that displays the message of a thrown exception.
+     * @return The parsed int input.
+     */
+    public static int readInt(String prompt, IntConsumer validator) {
+        while (true) {
+            int input;
+            try {
+                System.out.print(prompt);
+                input = scanner.nextInt();
+                scanner.nextLine();
+
+                validator.accept(input);
+                return input;
+            } catch (InputMismatchException e) {
+                System.out.println("Input tidak valid. Harap masukkan angka.");
+                scanner.nextLine();
+                continue;
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -72,8 +122,8 @@ public final class IOHelper {
     /**
      * Reads a date from the user input in the specified format.
      * 
-     * @param prompt     The prompt message to display to the user.
-     * @param dateFormat The expected date format (e.g., "dd/MM/yyyy").
+     * @param prompt     message to display to the user.
+     * @param dateFormat pattern to validate (e.g., "dd/MM/yyyy").
      * @return The parsed date input.
      * 
      * @throws IllegalArgumentException if the provided dateFormat is invalid.
@@ -88,6 +138,36 @@ public final class IOHelper {
                 return LocalDate.parse(input, dateFormatter);
             } catch (DateTimeParseException e) {
                 System.out.println("Input tidak valid. Harap masukkan tanggal dalam format " + dateFormat + ".");
+            }
+        }
+    }
+
+    /**
+     * Reads a date from the user input in the specified format with a validator.
+     * 
+     * @param prompt     message to display to the user.
+     * @param dateFormat pattern to validate (e.g., "dd/MM/yyyy").
+     * @param validator  that displays the message of a thrown exception.
+     * @return The parsed date input.
+     * 
+     * @throws IllegalArgumentException if the provided dateFormat is invalid.
+     */
+    public static LocalDate readDate(String prompt, String dateFormat, Consumer<LocalDate> validator) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+
+        while (true) {
+            try {
+                System.out.print(prompt);
+                String input = scanner.nextLine();
+
+                LocalDate date = LocalDate.parse(input, dateFormatter);
+
+                validator.accept(date);
+                return date;
+            } catch (DateTimeParseException e) {
+                System.out.println("Input tidak valid. Harap masukkan tanggal dalam format " + dateFormat + ".");
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
             }
         }
     }

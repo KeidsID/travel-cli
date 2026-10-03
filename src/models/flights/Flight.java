@@ -3,7 +3,7 @@ package models.flights;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
-import utils.IDGenerator;
+import utils.IdGenerator;
 
 public final class Flight {
     private final String id;
@@ -20,21 +20,33 @@ public final class Flight {
     private final double ticketPrice;
     private int passengerCount = 0;
 
-    public Flight(String flightNumber, String airline, FlightStop departure, FlightStop arrival, int maxPassanger,
-            double ticketPrice) {
-        if (maxPassanger < 0) {
-            throw new IllegalArgumentException("Flight.maxPassangers cannot be negative");
-        }
+    public Flight(
+        String flightNumber,
+        String airline,
+        FlightStop departure,
+        FlightStop arrival,
+        int maxPassanger,
+        double ticketPrice
+        ) {
 
         if (ticketPrice < 0) {
             throw new IllegalArgumentException("Flight.ticketPrice cannot be negative");
         }
 
-        this.id = flightNumber + "-" + IDGenerator.generateID();
+        this.id = "flight-" + flightNumber + "-" + IdGenerator.generateId();
+
         this.flightNumber = flightNumber;
         this.airline = airline;
+
+        if (departure.dateTime().isAfter(arrival.dateTime())) {
+            throw new IllegalArgumentException("Flight.arrival.dateTime must be after FLight.departure.dateTime");
+        }
         this.departure = departure;
         this.arrival = arrival;
+
+        if (maxPassanger < 0) {
+            throw new IllegalArgumentException("Flight.maxPassangers cannot be negative");
+        }
         this.maxPassangers = maxPassanger;
         this.ticketPrice = ticketPrice;
     }
@@ -101,19 +113,23 @@ public final class Flight {
 
     public Flight copyWithSchedule(ZonedDateTime departureDateTime, ZonedDateTime arrivalDateTime) {
         return new Flight(
-                flightNumber,
-                airline,
-                new FlightStop(departure.airport(), departureDateTime),
-                new FlightStop(arrival.airport(), arrivalDateTime),
-                maxPassangers, ticketPrice);
+            flightNumber,
+            airline,
+            new FlightStop(departure.airport(), departureDateTime),
+            new FlightStop(arrival.airport(), arrivalDateTime),
+            maxPassangers, 
+            ticketPrice
+        );
     }
 
     public Flight copyWithTicketPrice(double ticketPrice) {
         return new Flight(
-                flightNumber,
-                airline,
-                departure,
-                arrival,
-                maxPassangers, ticketPrice);
+            flightNumber,
+            airline,
+            departure,
+            arrival,
+            maxPassangers, 
+            ticketPrice
+        );
     }
 }

@@ -10,16 +10,16 @@ terinspirasi dari platform seperti Traveloka atau Tiket.com.
       berdasarkan kota asal, tujuan, tanggal, dan jumlah penumpang, serta
       melihat rincian ketersediaan penerbangan.
 
-- [ ] **Pencarian Hotel:** Pengguna dapat mencari ketersediaan hotel berdasarkan
-      kota, tanggal check-in/check-out, dan jumlah tamu beserta rincian
-      fasilitas dan harganya.
+- [x] **Pencarian Penginapan:** Pengguna dapat mencari ketersediaan penginapan
+      berdasarkan kota, tanggal check-in/check-out, dan jumlah kamar, serta
+      melihat rincian ketersediaan kamar dan harga per malam.
 
 - [ ] **Pemesanan Penerbangan:** Pengguna memasukkan data penumpang untuk
-      memesan penerbangan yang dipilih, lalu sistem akan menerbitkan nomor
-      konfirmasi pemesanan acak 6 digit.
+      memesan penerbangan yang dipilih, lalu sistem akan menerbitkan kode
+      booking penerbangan.
 
 - [ ] **Pemesanan Hotel:** Pengguna memesan hotel berdasarkan ID, memasukkan
-      data tamu, dan menerima nomor konfirmasi reservasi hotel.
+      data tamu, dan menerima nomor booking hotel.
 
 - [ ] **Pembatalan Reservasi:** Pengguna dapat membatalkan pesanan penerbangan
       ataupun hotel dengan menginput nomor konfirmasi.
@@ -27,7 +27,7 @@ terinspirasi dari platform seperti Traveloka atau Tiket.com.
 - [ ] **Lihat Semua Pemesanan (Opsional):** Sistem menampilkan daftar seluruh
       pesanan saat ini milik pengguna beserta detail dan nomor konfirmasinya.
 
-- [ ] **Validasi dan Penanganan Kesalahan (_Error Handling_):** Program wajib
+- [x] **Validasi dan Penanganan Kesalahan (_Error Handling_):** Program wajib
       menangani input tidak valid dengan baik, seperti menangkap error saat
       pengguna memasukkan huruf pada kolom angka atau mencari ID yang tidak
       tersedia, lalu meminta input ulang.
