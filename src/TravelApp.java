@@ -5,16 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import models.booking.Booking;
+import models.booking.Customer;
+import models.booking.FlightBooking;
 import models.flights.Flight;
 import models.stays.Stay;
 
 public final class TravelApp {
     private final List<Flight> flights;
     private final List<Stay> stays;
+    private final List<Booking<?>> bookings;
 
     public TravelApp(Flight[] flights, Stay[] stays) {
         this.flights = new ArrayList<Flight>(List.of(flights));
         this.stays = new ArrayList<Stay>(List.of(stays));
+        this.bookings = new ArrayList<Booking<?>>();
     }
 
     /**
@@ -71,5 +76,16 @@ public final class TravelApp {
                             && stay.getAvailableRoomCount(checkInDateTime, checkOutDateTime) >= availableRoomCount;
                 })
                 .toList();
+    }
+
+    public FlightBooking bookFlight(Flight flight, int bookedCount, Customer[] customers) {
+        if (flight.getAvailableSeats() == 0) {
+            throw new IllegalStateException("No more seats available for this flight.");
+        }
+
+        FlightBooking booking = new FlightBooking(flight, bookedCount, customers);
+        flight.setPassengerCount(flight.getPassengerCount() + bookedCount);
+        bookings.add(booking);
+        return booking;
     }
 }

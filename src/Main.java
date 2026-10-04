@@ -4,6 +4,8 @@ import java.util.List;
 
 import data.DummyFlights;
 import data.DummyStays;
+import models.booking.Customer;
+import models.booking.FlightBooking;
 import models.flights.Flight;
 import models.stays.Stay;
 import utils.IOHelper;
@@ -79,10 +81,41 @@ public class Main {
         }
         IOHelper.println("Hasil pencarian penerbangan: ");
 
-        flights.forEach((flight) -> {
+        for (int i = 0; i < flights.size(); i++) {
             IOHelper.printDivider("-");
-            printFlightDetails(flight);
+            IOHelper.println("No. " + (i + 1));
+            IOHelper.println("-".repeat(8));
+            printFlightDetails(flights.get(i));
+        }
+        IOHelper.printDivider();
+
+        int choice = IOHelper.readInt("Pilih hasil penerbangan untuk dibooking (0 untuk batal): ", (input) -> {
+            if (input < 0 || input > flights.size()) {
+                throw new InputMismatchException("Pilihan tidak valid.");
+            }
         });
+
+        if (choice == 0) {
+            return;
+        }
+
+        Flight selectedFlight = flights.get(choice - 1);
+        Customer[] customers = new Customer[passengerCount];
+
+        for (int i = 0; i < passengerCount; i++) {
+            IOHelper.printDivider("-");
+            IOHelper.println("Data Penumpang ke-" + (i + 1));
+            String customerName = readNonBlankString("Nama: ");
+            String contact = readNonBlankString("Kontak: ");
+            customers[i] = new Customer(customerName, contact);
+        }
+
+        FlightBooking booking = app.bookFlight(selectedFlight, passengerCount, customers);
+
+        IOHelper.printDivider();
+        IOHelper.println("BOOKING BERHASIL");
+        IOHelper.printDivider();
+        booking.printDetails();
     }
 
     private static void searchStays() {

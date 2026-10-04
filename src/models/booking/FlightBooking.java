@@ -16,6 +16,9 @@ public final class FlightBooking extends Booking<Flight> {
         FlightStop departure = flight.getDeparture();
         FlightStop arrival = flight.getArrival();
 
+        IOHelper.print("Nomor Booking  : ");
+        IOHelper.println(getBookedId());
+
         IOHelper.print("No. Penerbangan: ");
         IOHelper.println(flight.getFlightNumber());
 
@@ -57,11 +60,12 @@ public final class FlightBooking extends Booking<Flight> {
         int bookedCount = getBookedCount();
         double ticketPrice = flight.getTicketPrice();
 
+        IOHelper.printCurrency(bookedCount * ticketPrice);
+        IOHelper.print(" (");
         IOHelper.print(String.valueOf(bookedCount));
         IOHelper.print(" x ");
         IOHelper.printCurrency(ticketPrice);
-        IOHelper.print(" = ");
-        IOHelper.printCurrency(bookedCount * ticketPrice);
+        IOHelper.print(")");
         IOHelper.println("");
     }
 }

@@ -53,14 +53,14 @@ public final class StayBooking extends Booking<Stay> {
         double roomPrice = stay.getRoomPricePerNight();
         long nightsCount = ChronoUnit.DAYS.between(checkInDateTime.toLocalDate(), checkOutDateTime.toLocalDate());
 
+        IOHelper.printCurrency(bookedCount * nightsCount * roomPrice);
+        IOHelper.print(" (");
         IOHelper.print(String.valueOf(bookedCount));
         IOHelper.print(" kamar x ");
         IOHelper.print(String.valueOf(nightsCount));
         IOHelper.print(" malam x ");
         IOHelper.printCurrency(roomPrice);
-        IOHelper.print(" = ");
-        IOHelper.printCurrency(bookedCount * nightsCount * roomPrice);
-        IOHelper.println("");
+        IOHelper.println(")");
     }
 
 }

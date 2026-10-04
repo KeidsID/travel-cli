@@ -12,8 +12,8 @@ import utils.IdGenerator;
 public final class Stay {
     private final String id;
     private final String name;
-    private final String location;
     private final ZoneId zoneId;
+    private final String location;
 
     /**
      * The number of rooms built at the stay. Not the number of available rooms.
@@ -51,6 +51,10 @@ public final class Stay {
 
     public String getName() {
         return name;
+    }
+
+    public ZoneId getZoneId() {
+        return zoneId;
     }
 
     public String getLocation() {

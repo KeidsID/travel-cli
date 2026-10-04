@@ -14,7 +14,7 @@ terinspirasi dari platform seperti Traveloka atau Tiket.com.
       berdasarkan kota, tanggal check-in/check-out, dan jumlah kamar, serta
       melihat rincian ketersediaan kamar dan harga per malam.
 
-- [ ] **Pemesanan Penerbangan:** Pengguna memasukkan data penumpang untuk
+- [x] **Pemesanan Penerbangan:** Pengguna memasukkan data penumpang untuk
       memesan penerbangan yang dipilih, lalu sistem akan menerbitkan kode
       booking penerbangan.
 
