@@ -65,10 +65,17 @@ public final class Menu {
             IOHelper.printDivider();
 
             int choice = IOHelper.readInt("Pilih menu: ");
-            if (choice >= 1 && choice <= options.size()) {
+
+            int optionsCount = options.size();
+
+            if (choice >= 1 && choice <= optionsCount) {
                 options.get(choice - 1).action().run();
             } else {
-                IOHelper.println("Pilihan tidak valid!");
+                var optionsRange = (optionsCount == 1) ? "1"
+                        : ("1-" + String.valueOf((optionsCount + 1)));
+
+                IOHelper.println("Pilihan tidak valid! Mohon pilih opsi "
+                        + optionsRange);
             }
         }
     }

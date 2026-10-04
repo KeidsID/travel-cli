@@ -1,9 +1,6 @@
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.function.Consumer;
 
 import data.DummyFlights;
 import data.DummyStays;
@@ -62,12 +59,12 @@ public class Main {
         IOHelper.println("PENCARIAN PENERBANGAN");
         IOHelper.printDivider();
 
-        String origin = readNonBlankString("Darimana anda berangkat? : ");
-        String destination = readNonBlankString("Kemana anda pergi? : ");
+        String origin = readNonBlankString("Darimana anda berangkat? ");
+        String destination = readNonBlankString("Kemana anda pergi? ");
         LocalDate currentDate = LocalDate.now();
         LocalDate date = isTodayFlight ? currentDate
-                : readNonPastDate("Kapan anda berangkat? (dd-MM-yyyy): ", "dd-MM-yyyy");
-        int passengerCount = IOHelper.readInt("Berapa orang yang akan pergi? : ", (input) -> {
+                : readNonPastDate("Kapan anda berangkat? (dd-MM-yyyy) ", "dd-MM-yyyy");
+        int passengerCount = IOHelper.readInt("Berapa orang yang akan pergi? ", (input) -> {
             if (input <= 0) {
                 throw new InputMismatchException("Jumlah penumpang harus lebih dari 0.");
             }
@@ -93,15 +90,15 @@ public class Main {
         IOHelper.println("PENCARIAN PENGINAPAN");
         IOHelper.printDivider();
 
-        String city = readNonBlankString("Dimana anda akan menginap? : ");
-        LocalDate checkIn = readNonPastDate("Kapan anda check-in? (dd-MM-yyyy): ", "dd-MM-yyyy");
-        LocalDate checkOut = IOHelper.readDate("Kapan anda check-out? (dd-MM-yyyy): ", "dd-MM-yyyy", (dateInput) -> {
+        String city = readNonBlankString("Dimana anda akan menginap? ");
+        LocalDate checkIn = readNonPastDate("Kapan anda check-in? (dd-MM-yyyy) ", "dd-MM-yyyy");
+        LocalDate checkOut = IOHelper.readDate("Kapan anda check-out? (dd-MM-yyyy) ", "dd-MM-yyyy", (dateInput) -> {
             if (checkIn.isAfter(dateInput)) {
                 throw new InputMismatchException("Tanggal check-out harus setelah tanggal check-in.");
             }
         });
 
-        int roomCount = IOHelper.readInt("Butuh berapa kamar? : ", (intInput) -> {
+        int roomCount = IOHelper.readInt("Butuh berapa kamar? ", (intInput) -> {
             if (intInput <= 0) {
                 throw new InputMismatchException("Jumlah kamar harus lebih dari 0.");
             }

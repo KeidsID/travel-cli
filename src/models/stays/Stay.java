@@ -1,6 +1,7 @@
 package models.stays;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ public final class Stay {
     private final String id;
     private final String name;
     private final String location;
+    private final ZoneId zoneId;
 
     /**
      * The number of rooms built at the stay. Not the number of available rooms.
@@ -24,11 +26,12 @@ public final class Stay {
 
     private List<StayGuest> guests;
 
-    public Stay(String name, String location, int roomCount, double roomPricePerNight) {
+    public Stay(String name, String location, ZoneId zoneId, int roomCount, double roomPricePerNight) {
 
         this.id = "stay-" + IdGenerator.generateId();
         this.name = name;
         this.location = location;
+        this.zoneId = zoneId;
 
         if (roomCount < 0) {
             throw new IllegalArgumentException("Stay.roomCount cannot be negative");
@@ -57,7 +60,7 @@ public final class Stay {
     public double getRoomPricePerNight() {
         return roomPricePerNight;
     }
-    
+
     public void addGuest(StayGuest guest) {
         int availableRoomCount = getAvailableRoomCount(guest.checkIn(), guest.checkOut());
 
@@ -82,7 +85,6 @@ public final class Stay {
         TreeSet<Instant> occupancyChangePoints = new TreeSet<>();
         occupancyChangePoints.add(start);
 
-
         for (StayGuest guest : guests) {
             Instant guestStart = guest.checkIn().toInstant();
             if (!guestStart.isBefore(start) && guestStart.isBefore(end)) {
@@ -99,12 +101,11 @@ public final class Stay {
         return (int) (roomCount - maximumOccupiedRooms);
     }
 
-
     private static int getOccupiedRoomCountAt(List<StayGuest> guests, Instant point) {
         return guests.stream()
                 .filter((guest) -> {
                     return !guest.checkIn().toInstant().isAfter(point)
-                        && guest.checkOut().toInstant().isAfter(point);
+                            && guest.checkOut().toInstant().isAfter(point);
                 })
                 .mapToInt(StayGuest::roomCount)
                 .sum();

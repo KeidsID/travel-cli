@@ -17,48 +17,48 @@ public final class DummyFlights {
     public static final Flight[] data;
 
     static {
-        var jktZone = ZoneId.of("Asia/Jakarta");
-        var mksZone = ZoneId.of("Asia/Makassar");
-        var jypZone = ZoneId.of("Asia/Jayapura");
+        var wibZone = ZoneId.of("Asia/Jakarta");
+        var witaZone = ZoneId.of("Asia/Makassar");
+        var witZone = ZoneId.of("Asia/Jayapura");
 
         var date = LocalDate.now();
-        var wib = ZonedDateTime.of(date, LocalTime.MIDNIGHT, jktZone);
-        var wita = ZonedDateTime.of(date, LocalTime.MIDNIGHT, mksZone);
+        var wib = ZonedDateTime.of(date, LocalTime.MIDNIGHT, wibZone);
+        var wita = ZonedDateTime.of(date, LocalTime.MIDNIGHT, witaZone);
 
         var jktToMksGaruda = new Flight("GA401", "Garuda Indonesia",
                 new FlightStop(AirportCode.CGK, wib.withHour(8).withMinute(0)),
                 new FlightStop(AirportCode.UPG, wib.withHour(8).withMinute(0)
-                        .plusHours(2).plusMinutes(30).withZoneSameInstant(mksZone)),
+                        .plusHours(2).plusMinutes(30).withZoneSameInstant(witaZone)),
                 180, 3000000);
 
         var jktToMksCitilink = new Flight("QG322", "Citilink",
                 new FlightStop(AirportCode.CGK, wib.withHour(13).withMinute(45)),
                 new FlightStop(AirportCode.UPG, wib.withHour(13).withMinute(45)
-                        .plusHours(2).plusMinutes(30).withZoneSameInstant(mksZone)),
+                        .plusHours(2).plusMinutes(30).withZoneSameInstant(witaZone)),
                 180, 2800000);
 
         var mksToJypBatikAir = new Flight("ID6185", "Batik Air",
                 new FlightStop(AirportCode.UPG, wita.withHour(10).withMinute(15)),
                 new FlightStop(AirportCode.DJJ, wita.withHour(10).withMinute(15)
-                        .plusHours(3).plusMinutes(30).withZoneSameInstant(jypZone)),
+                        .plusHours(3).plusMinutes(30).withZoneSameInstant(witZone)),
                 150, 4400000);
 
         var mksToJypGaruda = new Flight("GA652", "Garuda Indonesia",
                 new FlightStop(AirportCode.UPG, wita.withHour(16).withMinute(40)),
                 new FlightStop(AirportCode.DJJ, wita.withHour(16).withMinute(40)
-                        .plusHours(3).plusMinutes(30).withZoneSameInstant(jypZone)),
+                        .plusHours(3).plusMinutes(30).withZoneSameInstant(witZone)),
                 180, 4600000);
 
         var jktToJypCitilink = new Flight("QG330", "Citilink",
                 new FlightStop(AirportCode.CGK, wib.withHour(7).withMinute(0)),
                 new FlightStop(AirportCode.DJJ, wib.withHour(7).withMinute(0)
-                        .plusHours(5).plusMinutes(20).withZoneSameInstant(jypZone)),
+                        .plusHours(5).plusMinutes(20).withZoneSameInstant(witZone)),
                 165, 6800000);
 
         var jktToJypBatikAir = new Flight("ID6188", "Batik Air",
                 new FlightStop(AirportCode.CGK, wib.withHour(11).withMinute(35)),
                 new FlightStop(AirportCode.DJJ, wib.withHour(11).withMinute(35)
-                        .plusHours(5).plusMinutes(20).withZoneSameInstant(jypZone)),
+                        .plusHours(5).plusMinutes(20).withZoneSameInstant(witZone)),
                 150, 6500000);
 
         data = new Flight[] {
