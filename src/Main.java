@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import data.DummyFlights;
@@ -45,8 +44,8 @@ public class Main {
         });
 
         Menu mainMenu = new Menu("MENU UTAMA", new MenuOption[] {
-                new MenuOption("Menu Penerbangan", () -> flightsMenu.show()),
-                new MenuOption("Menu Penginapan", () -> staysMenu.show())
+                new MenuOption("Menu Penerbangan", flightsMenu::show),
+                new MenuOption("Menu Penginapan", staysMenu::show)
         }, true);
 
         mainMenu.show();
@@ -68,7 +67,7 @@ public class Main {
                 : readNonPastDate("Kapan anda berangkat? (dd-MM-yyyy) ", "dd-MM-yyyy");
         int passengerCount = IOHelper.readInt("Berapa orang yang akan pergi? ", (input) -> {
             if (input <= 0) {
-                throw new InputMismatchException("Jumlah penumpang harus lebih dari 0.");
+                throw new IllegalArgumentException("Jumlah penumpang harus lebih dari 0.");
             }
         });
 
@@ -81,7 +80,9 @@ public class Main {
         }
         IOHelper.println("Hasil pencarian penerbangan: ");
 
-        for (int i = 0; i < flights.size(); i++) {
+        int flightsCount = flights.size();
+
+        for (int i = 0; i < flightsCount; i++) {
             IOHelper.printDivider("-");
             IOHelper.println("No. " + (i + 1));
             IOHelper.println("-".repeat(8));
@@ -90,8 +91,9 @@ public class Main {
         IOHelper.printDivider();
 
         int choice = IOHelper.readInt("Pilih hasil penerbangan untuk dibooking (0 untuk batal): ", (input) -> {
-            if (input < 0 || input > flights.size()) {
-                throw new InputMismatchException("Pilihan tidak valid.");
+            if (input < 0 || input > flightsCount) {
+                throw new IllegalArgumentException("Pilihan tidak valid. Pilihan tersedia cuma penerbangan "
+                        + (flightsCount == 1 ? "1" : ("1-" + flightsCount)));
             }
         });
 
@@ -127,13 +129,13 @@ public class Main {
         LocalDate checkIn = readNonPastDate("Kapan anda check-in? (dd-MM-yyyy) ", "dd-MM-yyyy");
         LocalDate checkOut = IOHelper.readDate("Kapan anda check-out? (dd-MM-yyyy) ", "dd-MM-yyyy", (dateInput) -> {
             if (checkIn.isAfter(dateInput)) {
-                throw new InputMismatchException("Tanggal check-out harus setelah tanggal check-in.");
+                throw new IllegalArgumentException("Tanggal check-out harus setelah tanggal check-in.");
             }
         });
 
         int roomCount = IOHelper.readInt("Butuh berapa kamar? ", (intInput) -> {
             if (intInput <= 0) {
-                throw new InputMismatchException("Jumlah kamar harus lebih dari 0.");
+                throw new IllegalArgumentException("Jumlah kamar harus lebih dari 0.");
             }
         });
 
@@ -159,7 +161,7 @@ public class Main {
     private static String readNonBlankString(String prompt) {
         return IOHelper.readString(prompt, (input) -> {
             if (input.isBlank()) {
-                throw new InputMismatchException("tidak boleh kosong");
+                throw new IllegalArgumentException("tidak boleh kosong");
             }
         });
     }
@@ -167,7 +169,7 @@ public class Main {
     private static LocalDate readNonPastDate(String prompt, String dateFormat) {
         return IOHelper.readDate(prompt, dateFormat, (date) -> {
             if (date.isBefore(LocalDate.now())) {
-                throw new InputMismatchException("Tanggal tidak boleh sebelum hari ini.");
+                throw new IllegalArgumentException("Tanggal tidak boleh sebelum hari ini.");
             }
         });
     }

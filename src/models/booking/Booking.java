@@ -50,7 +50,7 @@ public sealed abstract class Booking<T> permits FlightBooking, StayBooking {
         for (int i = 0; i < customers.length; i++) {
             Customer customer = customers[i];
 
-            IOHelper.print(((i == 0) ? "" : ", ") + customer.name() + " - " + customer.contact());
+            IOHelper.print(((i == 0) ? "" : ", ") + customer.name() + " <" + customer.contact() + ">");
         }
         IOHelper.println("");
     }
