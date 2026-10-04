@@ -5,6 +5,7 @@ import data.DummyFlights;
 import data.DummyStays;
 import models.booking.Customer;
 import models.booking.FlightBooking;
+import models.booking.StayBooking;
 import models.flights.Flight;
 import models.stays.Stay;
 import utils.IOHelper;
@@ -39,13 +40,9 @@ public class Main {
                 new MenuOption("Cari Jadwal Penerbangan Lain", () -> searchFlights(false))
         });
 
-        Menu staysMenu = new Menu("MENU PENGINAPAN", new MenuOption[] {
-                new MenuOption("Cari Penginapan", Main::searchStays)
-        });
-
         Menu mainMenu = new Menu("MENU UTAMA", new MenuOption[] {
                 new MenuOption("Menu Penerbangan", flightsMenu::show),
-                new MenuOption("Menu Penginapan", staysMenu::show)
+                new MenuOption("Cari Penginapan", Main::searchStays)
         }, true);
 
         mainMenu.show();
@@ -108,7 +105,7 @@ public class Main {
             IOHelper.printDivider("-");
             IOHelper.println("Data Penumpang ke-" + (i + 1));
             String customerName = readNonBlankString("Nama: ");
-            String contact = readNonBlankString("Kontak: ");
+            String contact = IOHelper.readString("Kontak: ");
             customers[i] = new Customer(customerName, contact);
         }
 
@@ -128,6 +125,10 @@ public class Main {
         String city = readNonBlankString("Dimana anda akan menginap? ");
         LocalDate checkIn = readNonPastDate("Kapan anda check-in? (dd-MM-yyyy) ", "dd-MM-yyyy");
         LocalDate checkOut = IOHelper.readDate("Kapan anda check-out? (dd-MM-yyyy) ", "dd-MM-yyyy", (dateInput) -> {
+            if (checkIn.isEqual(dateInput)) {
+                throw new IllegalArgumentException("Tidak dapat check-out di hari yang sama dengan check in.");
+            }
+
             if (checkIn.isAfter(dateInput)) {
                 throw new IllegalArgumentException("Tanggal check-out harus setelah tanggal check-in.");
             }
@@ -148,10 +149,42 @@ public class Main {
         }
         IOHelper.println("Hasil pencarian penginapan:");
 
-        stays.forEach((stay) -> {
+        int staysCount = stays.size();
+
+        for (int i = 0; i < staysCount; i++) {
             IOHelper.printDivider("-");
-            printStayDetails(stay);
+            IOHelper.println((i + 1) + ".");
+            printStayDetails(stays.get(i));
+        }
+        IOHelper.printDivider("-");
+
+        int choice = IOHelper.readInt("Pilih nomor penginapan untuk dibooking (0 untuk batal): ", (input) -> {
+            if (input < 0 || input > staysCount) {
+                throw new IllegalArgumentException("Pilihan tidak valid. Pilihan tersedia cuma penginapan "
+                        + (staysCount == 1 ? "1" : ("1-" + staysCount)));
+            }
         });
+
+        if (choice == 0) {
+            return;
+        }
+
+        Stay selectedStay = stays.get(choice - 1);
+        Customer[] customers = new Customer[1];
+
+        IOHelper.printDivider("-");
+        IOHelper.println("Data Pemesan");
+        String customerName = readNonBlankString("Nama: ");
+        String contact = IOHelper.readString("Kontak: ");
+        customers[0] = new Customer(customerName, contact);
+
+        StayBooking booking = app.bookStay(selectedStay, roomCount, checkIn, checkOut, customers);
+
+        IOHelper.printDivider();
+        IOHelper.println("BOOKING PENGINAPAN BERHASIL");
+        IOHelper.printDivider();
+        booking.printDetails();
+
     }
 
     // ========================================

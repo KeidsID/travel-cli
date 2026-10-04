@@ -18,7 +18,7 @@ terinspirasi dari platform seperti Traveloka atau Tiket.com.
       memesan penerbangan yang dipilih, lalu sistem akan menerbitkan kode
       booking penerbangan.
 
-- [ ] **Pemesanan Hotel:** Pengguna memesan hotel berdasarkan ID, memasukkan
+- [x] **Pemesanan Hotel:** Pengguna memesan hotel berdasarkan ID, memasukkan
       data tamu, dan menerima nomor booking hotel.
 
 - [ ] **Pembatalan Reservasi:** Pengguna dapat membatalkan pesanan penerbangan

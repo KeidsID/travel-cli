@@ -45,7 +45,6 @@ public final class StayBooking extends Booking<Stay> {
 
         IOHelper.print("Tamu           : ");
         printCustomers();
-        IOHelper.println("");
 
         IOHelper.print("Total Bayar    : ");
 
